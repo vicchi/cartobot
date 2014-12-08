@@ -1,0 +1,22 @@
+module.exports = {
+    twitter: {
+        enabled: true,
+        auth: {
+            consumer_key: 'YOUR-CONSUMER-KEY',
+            consumer_secret: 'YOUR-CONSUMER-SECRET',
+            access_token: 'YOUR-ACCESS-TOKEN',
+            access_token_secret: 'YOUR-ACCESS-TOKEN-SECRET'
+        },
+        tweets: 5,
+        short_url_length: 22,
+        short_url_length_https: 23
+    },
+    getpocket: {
+        enabled: true,
+        auth: {
+            consumer_key: 'YOUR-CONSUMER-KEY',
+            access_token: 'YOUR-ACCESS-TOKEN'
+        },
+        bookmarks: 5,
+    }
+};

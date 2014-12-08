@@ -1,0 +1,45 @@
+{
+  "name": "cartobot",
+  "version": "1.0.0",
+  "description": "CartoBot",
+  "homepage": "https://github.com/vicchi/cartobot",
+  "keywords": [
+    "cartobot",
+    "twitter",
+    "maps",
+    "getpocket"
+  ],
+  "bugs": {
+    "url": "https://github.com/vicchi/cartobot/issues",
+    "email": "gary@vicchi.org"
+  },
+  "main": "cartobot.js",
+  "engines": {
+    "node": ">= 0.10.33"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": {
+    "name": "Gary Gale",
+    "email": "gary@vicchi.org",
+    "url": "http://www.garygale.com/"
+  },
+  "contributors": {
+    "name": "Gary Gale",
+    "email": "gary@vicchi.org",
+    "url": "http://www.garygale.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vicchi/cartobot.git"
+  },
+  "private": true,
+  "license": "BSD",
+  "dependencies": {
+    "node-getpocket": "^1.0.0",
+    "simple-node-logger": "^0.92.13",
+    "stdio": "^0.2.3",
+    "twit": "^1.1.18"
+  }
+}
