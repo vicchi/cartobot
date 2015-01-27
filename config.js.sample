@@ -1,4 +1,5 @@
 module.exports = {
+    dryrun: false,
     twitter: {
         enabled: true,
         auth: {
@@ -9,7 +10,20 @@ module.exports = {
         },
         tweets: 5,
         short_url_length: 22,
-        short_url_length_https: 23
+        short_url_length_https: 23,
+        query: {
+            main: '#maps OR #cartography OR #map',
+            args: 'filter:links',
+            ignore: {
+                hashtags: [
+                'letterpress'
+                ],
+                accounts: [
+                'conflict_report',
+                'RT2EAT'
+                ]
+            }
+        }
     },
     getpocket: {
         enabled: true,

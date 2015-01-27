@@ -40,6 +40,7 @@
     "node-getpocket": "^1.0.0",
     "simple-node-logger": "^0.92.13",
     "stdio": "^0.2.3",
-    "twit": "^1.1.18"
+    "twit": "^1.1.18",
+    "twitter-text": "^1.10.0"
   }
 }

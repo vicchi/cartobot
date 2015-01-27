@@ -124,6 +124,11 @@ var options = StdIo.getopt({
         key: 'R',
         description: 'Run once and then terminate',
         mandatory: false
+    },
+    'dryrun': {
+        key: 'D',
+        description: 'Run searches but don\'t Tweet or Archive GetPocket bookmarks',
+        mandatory: false
     }
 });
 
@@ -147,6 +152,10 @@ if (options.notwitter) {
 if (options.nopocket) {
     config.getpocket.enabled = false;
 }
+if (options.dryrun) {
+    config.dryrun = true;
+}
+
 config.twitter.tweets = options.tweetcount;
 config.getpocket.bookmarks = options.bookmarkcount;
 

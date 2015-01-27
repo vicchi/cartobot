@@ -11,8 +11,8 @@ function TwitterBot(options) {
     this.twit = options.twit;
     this.log = options.logger;
 
-    this.raw_query = '#maps OR #cartography OR #carto OR #map filter:links';
-    this.query = encodeURIComponent(this.raw_query);
+    // this.raw_query = '#maps OR #cartography OR #carto OR #map -#letterpress -from:conflict_report -from:RT2EAT filter:links';
+    // this.query = encodeURIComponent(this.raw_query);
     this.last_tweet_id = 0;
 }
 
@@ -23,6 +23,25 @@ TwitterBot.prototype = {
     },
     run: function() {
         this.log.info('Running ...');
+
+        var qc = [];
+        var prop;
+        var cfg = this.config.twitter.query;
+        qc.push(cfg.main);
+        for (prop in cfg.ignore.hashtags) {
+            if (cfg.ignore.hashtags.hasOwnProperty(prop)) {
+                qc.push('-#' + cfg.ignore.hashtags[prop]);
+            }
+        }
+        for (prop in cfg.ignore.accounts) {
+            if (cfg.ignore.accounts.hasOwnProperty(prop)) {
+                qc.push('-from:' + cfg.ignore.accounts[prop]);
+            }
+        }
+        qc.push(cfg.args);
+        this.raw_query = qc.join(' ');
+        this.query = encodeURIComponent(this.raw_query);
+
         this.log.debug('Raw query: ' + this.raw_query);
         this.log.debug('Query: ' + this.query);
         this.search();
@@ -89,24 +108,31 @@ TwitterBot.prototype = {
             this.log.info(status.id_str + ': Cannot retweet user @' + status.user.screen_name + '; they\'re protected');
         }
         else {
-            this.log.info(status.id_str + ': Retweeting ...');
-            var self = this;
-            var options = {
-                id: status.id_str
-            };
-            this.log.debug(status.id_str + ': Hitting Twitter API endpoint ' + RETWEET_URL);
-            this.twit.post(RETWEET_URL, options, function(err, data, resp) {
-                if (err) {
-                    if (err.statusCode === 403) {
-                        self.log.info(status.id_str + ': failed to retweet, probably a duplicate');
+            if (this.config.dryrun) {
+                this.log.info(status.id_str + ': (DRY RUN) Retweeting ...');
+                this.log.debug(status.id_str + ': (DRY RUN) Hitting Twitter API endpoint ' + RETWEET_URL);
+            }
+            else {
+                var self = this;
+                var options = {
+                    id: status.id_str
+                };
+
+                this.log.info(status.id_str + ': Retweeting ...');
+                this.log.debug(status.id_str + ': Hitting Twitter API endpoint ' + RETWEET_URL);
+                this.twit.post(RETWEET_URL, options, function(err, data, resp) {
+                    if (err) {
+                        if (err.statusCode === 403) {
+                            self.log.info(status.id_str + ': failed to retweet, probably a duplicate');
+                        }
+                        else {
+                            self.log.debug(status.id_str + ': err: ', err);
+                            self._errorHandler(new Error(err.statusCode + ' ' + err.twitterReply));
+                            //return self._errorHandler(new Error(status.id_str + ' ' + err));
+                        }
                     }
-                    else {
-                        self.log.debug(status.id_str + ': err: ', err);
-                        self._errorHandler(new Error(err.statusCode + ' ' + err.twitterReply));
-                        //return self._errorHandler(new Error(status.id_str + ' ' + err));
-                    }
-                }
-            });
+                });
+            }
         }
         this._followUser(status);
     },
@@ -120,14 +146,22 @@ TwitterBot.prototype = {
             var options = {
                 user_id: status.user.id
             };
-            this.log.info(status.id_str + ': Following user @' + status.user.screen_name);
-            this.log.debug(status.id_str + ': Hitting Twitter API endpoint ' + FOLLOW_URL);
-            this.twit.post(FOLLOW_URL, options, function(err, data, resp) {
-                if (err) {
-                    self._errorHandler(new Error(err.statusCode + ' ' + err.twitterReply));
-                    // return self._errorHandler(new Error(status.id_str + ' ' + err));
-                }
-            });
+
+            if (this.config.dryrun) {
+                this.log.info(status.id_str + ': (DRY RUN) Following user @' + status.user.screen_name);
+                this.log.debug(status.id_str + ': (DRY RUN) Hitting Twitter API endpoint ' + FOLLOW_URL);
+            }
+            else {
+                this.log.info(status.id_str + ': Following user @' + status.user.screen_name);
+                this.log.debug(status.id_str + ': Hitting Twitter API endpoint ' + FOLLOW_URL);
+
+                this.twit.post(FOLLOW_URL, options, function(err, data, resp) {
+                    if (err) {
+                        self._errorHandler(new Error(err.statusCode + ' ' + err.twitterReply));
+                        // return self._errorHandler(new Error(status.id_str + ' ' + err));
+                    }
+                });
+            }
         }
     },
     _errorHandler: function(err) {
