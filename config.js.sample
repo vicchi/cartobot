@@ -1,5 +1,6 @@
 module.exports = {
     dryrun: false,
+    title: 'cartobot',  // WARNING make sure this matches the process name for the stop script in package.json
     twitter: {
         enabled: true,
         auth: {

@@ -132,6 +132,12 @@ var options = StdIo.getopt({
     }
 });
 
+var title = 'cartobot';
+if (options.title) {
+    title = options.title;
+}
+process.title = title;
+
 var logManager = Logger.createLogManager();
 var logLevel = 'info';
 if (options.debug) {
