@@ -94,7 +94,7 @@ var options = StdIo.getopt({
         description: 'How often CartoBot wakes up and runs, in minutes',
         mandatory: false,
         args: 1,
-        default: 60
+        default: 120
     },
     'tweetcount': {
         key: 't',
