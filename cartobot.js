@@ -2,7 +2,7 @@
 
 "use strict";
 
-var config = require('./config');
+var config = require('./etc/config');
 var TwitterBot = require('./twitter-bot');
 var PocketBot = require('./pocket-bot');
 var Twit = require('twit');
