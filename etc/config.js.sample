@@ -1,7 +1,10 @@
 module.exports = {
+    // dryrun: set to true to disable tweeting, retweeting, following and archiving GetPocket bookmarks
     dryrun: false,
-    title: 'cartobot',  // WARNING make sure this matches the process name for the stop script in package.json
+    // title: process title - WARNING make sure this matches the process name for the stop script in package.json
+    title: 'cartobot',
     twitter: {
+        // twitter.enabled: set to false to disable Twitter searching, retweeting and following. Does not disable tweeting GetPocket bookmarks
         enabled: true,
         auth: {
             consumer_key: 'YOUR-CONSUMER-KEY',
@@ -9,29 +12,41 @@ module.exports = {
             access_token: 'YOUR-ACCESS-TOKEN',
             access_token_secret: 'YOUR-ACCESS-TOKEN-SECRET'
         },
+        // twitter.tweets: number of applicable search results that will be retweeted
         tweets: 5,
+        // twitter.short_url_length, twitter.short_url_length_https: default t.co URL lengths
         short_url_length: 22,
         short_url_length_https: 23,
         query: {
+            // twitter.query.main: main Twitter search API query
             main: '#maps OR #cartography OR #map',
+            // twitter.query.args: additional search arguments
             args: 'filter:links',
             ignore: {
+                // twitter.query.ignore.hashtags: array of hashtags to exclude
                 hashtags: [
-                'letterpress'
+                    'letterpress'
                 ],
+                // twitter.query.ignore.accounts: array of accounts to exclude
                 accounts: [
-                'conflict_report',
-                'RT2EAT'
+                    'conflict_report',
+                    'RT2EAT'
                 ]
             }
         }
     },
     getpocket: {
+        // getpocket.enabled: set to false to disable Twitter searching, retweeting and following. Does not disable tweeting GetPocket bookmarks
         enabled: true,
         auth: {
             consumer_key: 'YOUR-CONSUMER-KEY',
             access_token: 'YOUR-ACCESS-TOKEN'
         },
+        // getpocket.bookmarks: number of applicable GetPocket bookmarks that will be tweeted
         bookmarks: 5,
+        query: {
+            // getpocket.query.tag: the GetPocket bookmark tag to be searched for
+            tag: 'maps'
+        }
     }
 };

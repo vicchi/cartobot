@@ -12,7 +12,7 @@ function PocketBot(options) {
     this.log = options.logger;
 
     this.getPocket = new GetPocket(this.config.getpocket.auth);
-    this.tags = 'maps';
+    this.tags = this.config.getpocket.query.tag;
 }
 
 PocketBot.prototype = {
