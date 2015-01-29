@@ -1,0 +1,102 @@
+#!/bin/bash
+#
+# cartobot  Service script for the map loving Twitter bot
+#
+# chkconfig: 2345 85 15
+# description: Cartobot loves maps.
+#
+# processname: cartobot
+# config: /etc/tilestache/tilestache.conf
+# config: /etc/tilestache/gunicorn.conf
+# pidfile: /var/run/cartobot.pid
+
+### BEGIN INIT INFO
+# Provides: cartobot
+# Required-Start: $local_fs $network $syslog
+# Required-Stop: $local_fs $syslog
+# Should-Start: $syslog
+# Should-Stop: $network $syslog
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: Service script for the map loving Twitter bot
+# Description: Cartobot is a Node.js Twitter-bot that loves maps
+### END INIT INFO
+
+. /etc/rc.d/init.d/functions
+
+. /etc/sysconfig/network
+
+[ "$NETWORKING" = "no" ] && exit 0
+
+NAME=cartobot
+USER=cartobot
+LOCKFILE=/var/lock/subsys/$NAME
+PIDFILE=/var/run/$NAME.pid
+LOGFILE=/var/log/forever.log
+OUTFILE=/var/log/$NAME.log
+ERRFILE=/var/log/$NAME.err
+SRCDIR=/home/$NAME
+SCRIPT=$SRCDIR/$NAME/${NAME}.js
+CONFIG=$SRCDIR/$NAME/etc/config.js
+UPTIME=2000
+RETVAL=0
+
+start() {
+    [ -f $SCRIPT ] || exit 5
+    [ -f $CONFIG ] || exit 6
+    echo -n "Starting $NAME node instance: "
+    forever start --append -l $LOGFILE -o $OUTFILE -e $ERRFILE --pidFile $PIDFILE --minUptime $UPTIME --spinSleepTime $UPTIME $SCRIPT
+    RETVAL=$?
+    [ $RETVAL -eq 0 ] && touch $LOCKFILE
+    echo
+    return $RETVAL
+}
+
+stop() {
+    [ -f $SCRIPT ] || exit 5
+    [ -f $CONFIG ] || exit 6
+    echo -n "Stopping $NAME node instance: "
+    forever stop $SCRIPT
+    RETVAL=$?
+    [ $RETVAL -eq 0 ] && rm -f $LOCK_FILE
+    echo
+
+}
+
+restart() {
+    [ -f $SCRIPT ] || exit 5
+    [ -f $CONFIG ] || exit 6
+    echo -n "Restarting $NAME node instance: "
+    forever restart $SCRIPT
+    RETVAL=$?
+    echo
+}
+
+get_status() {
+    status -p $PIDFILE $NAME
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    restart)
+        restart
+        ;;
+    status)
+        get_status
+        RETVAL=$?
+        if [ $RETVAL -eq 3 -a -f $LOCKFILE ]; then
+            RETVAL=2
+        fi
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|restart|status}"
+        RETVAL=2
+        ;;
+esac
+
+exit $RETVAL
