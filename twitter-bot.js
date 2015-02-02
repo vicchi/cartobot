@@ -42,7 +42,7 @@ TwitterBot.prototype = {
         this.raw_query = qc.join(' ');
         this.query = encodeURIComponent(this.raw_query);
 
-        this.log.debug('Raw query: ' + this.raw_query);
+        this.log.info('Twitter search query: ' + this.raw_query);
         this.log.debug('Query: ' + this.query);
         this.search();
     },

@@ -45,7 +45,7 @@ CartoBot.prototype = {
     },
     run: function() {
         this.log.info('Running ...');
-        this.log.debug('Getting current Twitter config ...');
+        // this.log.debug('Getting current Twitter config ...');
         // var self = this;
         // this.twit.get('help/configuration', {}, function(err, reply) {
         //     if (err) {
